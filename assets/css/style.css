@@ -1,6 +1,141 @@
-/* AdBlock360 Test Styles */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+/* ===== AdBlock360 Test ===== */
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
 }
+
+body{
+font-family:Arial,Helvetica,sans-serif;
+background:#070b14;
+color:#fff;
+overflow-x:hidden;
+}
+
+.background{
+position:fixed;
+inset:0;
+z-index:-1;
+overflow:hidden;
+}
+
+.blur{
+position:absolute;
+width:350px;
+height:350px;
+border-radius:50%;
+filter:blur(120px);
+animation:float 12s ease-in-out infinite;
+}
+
+.blur1{
+background:#2563eb;
+top:-80px;
+left:-100px;
+}
+
+.blur2{
+background:#7c3aed;
+bottom:-120px;
+right:-80px;
+animation-delay:3s;
+}
+
+@keyframes float{
+0%,100%{
+transform:translateY(0);
+}
+50%{
+transform:translateY(40px);
+}
+}
+
+.navbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:25px 8%;
+backdrop-filter:blur(20px);
+background:rgba(255,255,255,.05);
+border-bottom:1px solid rgba(255,255,255,.08);
+position:sticky;
+top:0;
+}
+
+.logo{
+font-size:28px;
+font-weight:bold;
+color:#60a5fa;
+}
+
+.nav-links{
+display:flex;
+gap:25px;
+list-style:none;
+}
+
+.nav-links a{
+text-decoration:none;
+color:white;
+transition:.3s;
+}
+
+.nav-links a:hover{
+color:#60a5fa;
+}
+
+.hero{
+min-height:90vh;
+display:flex;
+justify-content:center;
+align-items:center;
+text-align:center;
+padding:40px;
+}
+
+.hero-content{
+max-width:750px;
+}
+
+.hero h1{
+font-size:56px;
+margin-bottom:20px;
+}
+
+.hero p{
+font-size:20px;
+opacity:.8;
+line-height:1.7;
+margin-bottom:35px;
+}
+
+#startTest{
+padding:16px 40px;
+font-size:18px;
+border:none;
+border-radius:14px;
+cursor:pointer;
+background:#2563eb;
+color:white;
+transition:.3s;
+box-shadow:0 0 25px rgba(37,99,235,.45);
+}
+
+#startTest:hover{
+transform:translateY(-4px);
+box-shadow:0 0 45px rgba(37,99,235,.7);
+}
+
+#results{
+padding:80px 8%;
+}
+
+#resultCard{
+margin-top:20px;
+padding:30px;
+border-radius:20px;
+background:rgba(255,255,255,.05);
+backdrop-filter:blur(20px);
+border:1px solid rgba(255,255,255,.08);
+  }
