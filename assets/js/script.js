@@ -1,34 +1,25 @@
 const startButton = document.getElementById("startTest");
 const resultCard = document.getElementById("resultCard");
 
-async function detectAdBlock() {
-
+function testScript(url) {
     return new Promise((resolve) => {
+        const script = document.createElement("script");
 
-        const ad = document.createElement("div");
+        script.src = url;
+        script.async = true;
 
-        ad.className = "adsbox";
-        ad.style.position = "absolute";
-        ad.style.left = "-999px";
-        ad.innerHTML = "&nbsp;";
+        script.onload = () => {
+            script.remove();
+            resolve(false); // Bloklanmayıb
+        };
 
-        document.body.appendChild(ad);
+        script.onerror = () => {
+            script.remove();
+            resolve(true); // Çox güman ki bloklanıb
+        };
 
-        setTimeout(() => {
-
-            const blocked =
-                ad.offsetHeight === 0 ||
-                ad.clientHeight === 0 ||
-                window.getComputedStyle(ad).display === "none";
-
-            document.body.removeChild(ad);
-
-            resolve(blocked);
-
-        }, 120);
-
+        document.head.appendChild(script);
     });
-
 }
 
 startButton.addEventListener("click", async () => {
@@ -36,27 +27,39 @@ startButton.addEventListener("click", async () => {
     startButton.disabled = true;
     startButton.textContent = "Testing...";
 
-    resultCard.innerHTML = "<h3>Running AdBlock Test...</h3>";
+    resultCard.innerHTML = "<h3>Running tests...</h3>";
 
-    const blocked = await detectAdBlock();
+    const results = [];
 
-    if (blocked) {
+    for (const test of adTests) {
 
-        resultCard.innerHTML = `
-            <h2>✅ AdBlock Detected</h2>
-            <p>Your ad blocker appears to be working.</p>
-        `;
+        resultCard.innerHTML = `<h3>Testing ${test.name}...</h3>`;
 
-    } else {
+        const blocked = await testScript(test.url);
 
-        resultCard.innerHTML = `
-            <h2>❌ No AdBlock Detected</h2>
-            <p>Ads were not blocked.</p>
-        `;
-
+        results.push({
+            name: test.name,
+            blocked: blocked
+        });
     }
 
-    startButton.textContent = "Run Again";
+    const blockedCount = results.filter(r => r.blocked).length;
+
+    let html = `
+        <h2>AdBlock Test Results</h2>
+        <p><strong>${blockedCount} / ${results.length}</strong> tests blocked</p>
+        <hr>
+    `;
+
+    results.forEach(r => {
+        html += `
+            <p>${r.blocked ? "✅" : "❌"} ${r.name}</p>
+        `;
+    });
+
+    resultCard.innerHTML = html;
+
     startButton.disabled = false;
+    startButton.textContent = "Run Again";
 
 });
