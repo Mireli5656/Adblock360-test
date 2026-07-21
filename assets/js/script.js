@@ -1,23 +1,21 @@
 const startButton = document.getElementById("startTest");
 const resultCard = document.getElementById("resultCard");
 
-async function loadTests(file) {
-    const response = await fetch(file);
+async function loadJson(path) {
+    const response = await fetch(path);
 
     if (!response.ok) {
-        throw new Error(`Cannot load ${file}`);
+        throw new Error(`Failed to load: ${path}`);
     }
 
     return await response.json();
 }
 
-async function runCategory(title, tests) {
+async function runTests(title, tests) {
 
-    let blocked = 0;
     let html = `<h3>${title}</h3><ul>`;
 
     for (const test of tests) {
-
         html += `<li>⏳ ${test.name}</li>`;
     }
 
@@ -25,10 +23,7 @@ async function runCategory(title, tests) {
 
     resultCard.innerHTML = html;
 
-    return {
-        blocked,
-        total: tests.length
-    };
+    return tests.length;
 }
 
 startButton.addEventListener("click", async () => {
@@ -38,27 +33,29 @@ startButton.addEventListener("click", async () => {
 
     try {
 
-        const ads = await loadTests("tests/ads.json");
-        const trackers = await loadTests("tests/trackers.json");
+        const ads = await loadJson("tests/ads.json");
+        const trackers = await loadJson("tests/trackers.json");
 
-        const adResult = await runCategory("Ads", ads);
-        const trackerResult = await runCategory("Trackers", trackers);
+        const adCount = await runTests("Ads", ads);
+        const trackerCount = await runTests("Trackers", trackers);
 
         resultCard.innerHTML = `
-            <h2>AdBlock360</h2>
+            <h2>✅ Engine Loaded</h2>
 
-            <p>Ads Tests: ${adResult.total}</p>
+            <p>Ads Tests: <b>${adCount}</b></p>
 
-            <p>Tracker Tests: ${trackerResult.total}</p>
+            <p>Tracker Tests: <b>${trackerCount}</b></p>
 
-            <p>Engine loaded successfully ✅</p>
+            <p>Everything loaded successfully.</p>
         `;
 
-    } catch (err) {
+    } catch (error) {
+
+        console.error(error);
 
         resultCard.innerHTML = `
-            <h2>Error</h2>
-            <p>${err.message}</p>
+            <h2>❌ Error</h2>
+            <p>${error.message}</p>
         `;
 
     }
