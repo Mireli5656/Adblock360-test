@@ -1,52 +1,62 @@
 const startButton = document.getElementById("startTest");
 const resultCard = document.getElementById("resultCard");
 
+async function detectAdBlock() {
+
+    return new Promise((resolve) => {
+
+        const ad = document.createElement("div");
+
+        ad.className = "adsbox";
+        ad.style.position = "absolute";
+        ad.style.left = "-999px";
+        ad.innerHTML = "&nbsp;";
+
+        document.body.appendChild(ad);
+
+        setTimeout(() => {
+
+            const blocked =
+                ad.offsetHeight === 0 ||
+                ad.clientHeight === 0 ||
+                window.getComputedStyle(ad).display === "none";
+
+            document.body.removeChild(ad);
+
+            resolve(blocked);
+
+        }, 120);
+
+    });
+
+}
+
 startButton.addEventListener("click", async () => {
 
     startButton.disabled = true;
     startButton.textContent = "Testing...";
 
-    resultCard.innerHTML = `
-        <h3>Running Tests...</h3>
-        <p>Checking browser...</p>
-    `;
+    resultCard.innerHTML = "<h3>Running AdBlock Test...</h3>";
 
-    const tests = [
-        "Ad Scripts",
-        "Banner Ads",
-        "Trackers",
-        "Analytics",
-        "Social Widgets",
-        "Privacy"
-    ];
+    const blocked = await detectAdBlock();
 
-    for (const test of tests) {
-        await new Promise(resolve => setTimeout(resolve, 800));
+    if (blocked) {
 
         resultCard.innerHTML = `
-            <h3>Running Tests...</h3>
-            <p>Checking: ${test}</p>
+            <h2>✅ AdBlock Detected</h2>
+            <p>Your ad blocker appears to be working.</p>
         `;
+
+    } else {
+
+        resultCard.innerHTML = `
+            <h2>❌ No AdBlock Detected</h2>
+            <p>Ads were not blocked.</p>
+        `;
+
     }
 
-    await new Promise(resolve => setTimeout(resolve, 800));
-
-    resultCard.innerHTML = `
-        <h2>Test Complete</h2>
-
-        <p><strong>Score:</strong> 100 / 100</p>
-
-        <ul style="margin-top:15px;line-height:2;">
-            <li>✅ Ad scripts blocked</li>
-            <li>✅ Banner ads blocked</li>
-            <li>✅ Trackers blocked</li>
-            <li>✅ Analytics blocked</li>
-            <li>✅ Social trackers blocked</li>
-            <li>✅ Privacy checks passed</li>
-        </ul>
-    `;
-
-    startButton.disabled = false;
     startButton.textContent = "Run Again";
+    startButton.disabled = false;
 
 });
