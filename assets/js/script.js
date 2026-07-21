@@ -1,25 +1,34 @@
 const startButton = document.getElementById("startTest");
 const resultCard = document.getElementById("resultCard");
 
-function testScript(url) {
-    return new Promise((resolve) => {
-        const script = document.createElement("script");
+async function loadTests(file) {
+    const response = await fetch(file);
 
-        script.src = url;
-        script.async = true;
+    if (!response.ok) {
+        throw new Error(`Cannot load ${file}`);
+    }
 
-        script.onload = () => {
-            script.remove();
-            resolve(false); // Bloklanmayıb
-        };
+    return await response.json();
+}
 
-        script.onerror = () => {
-            script.remove();
-            resolve(true); // Çox güman ki bloklanıb
-        };
+async function runCategory(title, tests) {
 
-        document.head.appendChild(script);
-    });
+    let blocked = 0;
+    let html = `<h3>${title}</h3><ul>`;
+
+    for (const test of tests) {
+
+        html += `<li>⏳ ${test.name}</li>`;
+    }
+
+    html += "</ul>";
+
+    resultCard.innerHTML = html;
+
+    return {
+        blocked,
+        total: tests.length
+    };
 }
 
 startButton.addEventListener("click", async () => {
@@ -27,37 +36,32 @@ startButton.addEventListener("click", async () => {
     startButton.disabled = true;
     startButton.textContent = "Testing...";
 
-    resultCard.innerHTML = "<h3>Running tests...</h3>";
+    try {
 
-    const results = [];
+        const ads = await loadTests("tests/ads.json");
+        const trackers = await loadTests("tests/trackers.json");
 
-    for (const test of adTests) {
+        const adResult = await runCategory("Ads", ads);
+        const trackerResult = await runCategory("Trackers", trackers);
 
-        resultCard.innerHTML = `<h3>Testing ${test.name}...</h3>`;
+        resultCard.innerHTML = `
+            <h2>AdBlock360</h2>
 
-        const blocked = await testScript(test.url);
+            <p>Ads Tests: ${adResult.total}</p>
 
-        results.push({
-            name: test.name,
-            blocked: blocked
-        });
-    }
+            <p>Tracker Tests: ${trackerResult.total}</p>
 
-    const blockedCount = results.filter(r => r.blocked).length;
-
-    let html = `
-        <h2>AdBlock Test Results</h2>
-        <p><strong>${blockedCount} / ${results.length}</strong> tests blocked</p>
-        <hr>
-    `;
-
-    results.forEach(r => {
-        html += `
-            <p>${r.blocked ? "✅" : "❌"} ${r.name}</p>
+            <p>Engine loaded successfully ✅</p>
         `;
-    });
 
-    resultCard.innerHTML = html;
+    } catch (err) {
+
+        resultCard.innerHTML = `
+            <h2>Error</h2>
+            <p>${err.message}</p>
+        `;
+
+    }
 
     startButton.disabled = false;
     startButton.textContent = "Run Again";
