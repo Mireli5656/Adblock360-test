@@ -7,27 +7,25 @@ document.addEventListener("DOMContentLoaded", () => {
     const progressPercent = document.getElementById("progressPercent");
 
     if (!startButton || !resultCard || !progressContainer || !progressFill || !progressText || !progressPercent) {
+        console.error("AdBlock360: required elements missing.");
         return;
     }
 
     async function loadJson(path) {
         const response = await fetch(path);
-        if (!response.ok) {
-            throw new Error(`Cannot load ${path}`);
-        }
+        if (!response.ok) throw new Error(`Cannot load ${path}`);
         return await response.json();
     }
 
-    function updateProgress(done, total, label = "Running") {
+    function setProgress(done, total, label) {
         const percent = total > 0 ? Math.round((done / total) * 100) : 0;
-
         progressContainer.style.display = "block";
         progressFill.style.width = `${percent}%`;
-        progressText.textContent = `${label} ${done}/${total}`;
+        progressText.textContent = label;
         progressPercent.textContent = `${percent}%`;
     }
 
-    function renderCategory(title, results) {
+    function renderResults(title, results) {
         return `
             <div class="section">
                 <h3>${title}</h3>
@@ -38,11 +36,11 @@ document.addEventListener("DOMContentLoaded", () => {
         `;
     }
 
-    function renderSummary(adResults, trackerResults) {
-        const allResults = [...adResults, ...trackerResults];
-        const blocked = allResults.filter((r) => r.blocked).length;
-        const total = allResults.length;
-        const score = total > 0 ? Math.round((blocked / total) * 100) : 100;
+    function renderFinalReport(adResults, trackerResults) {
+        const all = [...adResults, ...trackerResults];
+        const blocked = all.filter((r) => r.blocked).length;
+        const total = all.length;
+        const score = total ? Math.round((blocked / total) * 100) : 100;
 
         return `
             <h2>AdBlock360 Report</h2>
@@ -53,57 +51,34 @@ document.addEventListener("DOMContentLoaded", () => {
             <p><strong>Trackers:</strong> ${trackerResults.filter((r) => r.blocked).length} / ${trackerResults.length}</p>
             <hr>
             <div class="result-grid">
-                <div>${renderCategory("Ads", adResults)}</div>
-                <div>${renderCategory("Trackers", trackerResults)}</div>
+                <div>${renderResults("Ads", adResults)}</div>
+                <div>${renderResults("Trackers", trackerResults)}</div>
             </div>
         `;
     }
 
-    async function testResource(url, timeout = 2500) {
-        return new Promise((resolve) => {
-            const script = document.createElement("script");
-            let finished = false;
-
-            const done = (blocked) => {
-                if (finished) return;
-                finished = true;
-                script.remove();
-                resolve(blocked);
-            };
-
-            const timer = setTimeout(() => done(true), timeout);
-
-            script.onload = () => {
-                clearTimeout(timer);
-                done(false);
-            };
-
-            script.onerror = () => {
-                clearTimeout(timer);
-                done(true);
-            };
-
-            script.src = url;
-            script.async = true;
-            document.head.appendChild(script);
-        });
-    }
-
-    async function runTests(tests, label, startIndex, totalCount, results) {
+    async function runCategory(title, tests, doneStart, totalTests, results) {
         for (let i = 0; i < tests.length; i++) {
             const test = tests[i];
-            updateProgress(startIndex + i, totalCount, label);
+            const done = doneStart + i;
 
+            setProgress(done, totalTests, `Testing ${title}: ${test.name}`);
             const blocked = await testResource(test.url);
-            results.push({ name: test.name, blocked });
+
+            results.push({
+                name: test.name,
+                blocked
+            });
 
             resultCard.innerHTML = `
                 <h2>AdBlock360 Report</h2>
-                <p><strong>Status:</strong> ${label}</p>
-                <p><strong>Progress:</strong> ${startIndex + i} / ${totalCount}</p>
+                <p><strong>Status:</strong> ${title}</p>
+                <p><strong>Current:</strong> ${test.name}</p>
                 <hr>
-                ${renderCategory("Ads", label === "Ads" ? results : [])}
-                ${renderCategory("Trackers", label === "Trackers" ? results : [])}
+                <div class="result-grid">
+                    <div>${renderResults("Ads", title === "Ads" ? results : [])}</div>
+                    <div>${renderResults("Trackers", title === "Trackers" ? results : [])}</div>
+                </div>
             `;
         }
     }
@@ -128,26 +103,26 @@ document.addEventListener("DOMContentLoaded", () => {
             const adResults = [];
             const trackerResults = [];
 
-            await runTests(ads, "Ads", done, total, adResults);
+            await runCategory("Ads", ads, done, total, adResults);
             done += ads.length;
-            updateProgress(done, total, "Ads complete");
+            setProgress(done, total, "Ads complete");
 
-            await runTests(trackers, "Trackers", done, total, trackerResults);
+            await runCategory("Trackers", trackers, done, total, trackerResults);
             done += trackers.length;
-            updateProgress(done, total, "Completed");
+            setProgress(done, total, "Completed");
 
             progressFill.style.width = "100%";
-            progressPercent.textContent = "100%";
             progressText.textContent = "Completed";
+            progressPercent.textContent = "100%";
 
-            resultCard.innerHTML = renderSummary(adResults, trackerResults);
+            resultCard.innerHTML = renderFinalReport(adResults, trackerResults);
         } catch (error) {
             console.error(error);
+            progressText.textContent = "Error";
             resultCard.innerHTML = `
                 <h2>❌ Error</h2>
                 <p>${error.message}</p>
             `;
-            progressText.textContent = "Error";
         } finally {
             startButton.disabled = false;
             startButton.textContent = "Run Again";
