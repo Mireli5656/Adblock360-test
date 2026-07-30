@@ -42,31 +42,31 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     async function runCategory(title, tests) {
-        let html = `<h3>${title}</h3><ul class="test-list">`;
         const results = [];
+        let html = `<h3>${title}</h3><ul class="test-list">`;
 
         for (const test of tests) {
-            html += `<li>⏳ ${test.name}</li>`;
-            resultCard.innerHTML = html + `</ul>`;
             const blocked = await testResource(test.url);
             results.push({ name: test.name, blocked });
+
             html = `<h3>${title}</h3><ul class="test-list">`;
             for (const r of results) {
                 html += `<li>${r.blocked ? "🟢" : "🔴"} ${r.name} - ${r.blocked ? "Blocked" : "Allowed"}</li>`;
             }
-        }
+            html += `</ul>`;
 
-        html += `</ul>`;
-        resultCard.innerHTML = html;
+            resultCard.innerHTML = html;
+        }
 
         return results;
     }
 
-    function calculate(resultsA, resultsB) {
-        const all = [...resultsA, ...resultsB];
+    function calculateScore(adResults, trackerResults) {
+        const all = [...adResults, ...trackerResults];
         const blocked = all.filter(r => r.blocked).length;
         const total = all.length;
         const score = total ? Math.round((blocked / total) * 100) : 100;
+
         return { blocked, total, score };
     }
 
@@ -82,7 +82,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const adResults = await runCategory("Ads", ads);
             const trackerResults = await runCategory("Trackers", trackers);
 
-            const summary = calculate(adResults, trackerResults);
+            const summary = calculateScore(adResults, trackerResults);
 
             resultCard.innerHTML = `
                 <h2>AdBlock360 Report</h2>
