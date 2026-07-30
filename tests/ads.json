@@ -1,42 +1,56 @@
 [
-  {
-    "name": "Google Ads",
-    "url": "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
-  },
-  {
-    "name": "DoubleClick",
-    "url": "https://securepubads.g.doubleclick.net/tag/js/gpt.js"
-  },
-  {
-    "name": "Google Tag Services",
-    "url": "https://www.googletagservices.com/tag/js/gpt.js"
-  },
-  {
-    "name": "Media.net",
-    "url": "https://contextual.media.net/dmedianet.js"
-  },
-  {
-    "name": "Amazon Ads",
-    "url": "https://c.amazon-adsystem.com/aax2/apstag.js"
-  },
-  {
-    "name": "Taboola",
-    "url": "https://cdn.taboola.com/libtrc/unip.js"
-  },
-  {
-    "name": "Outbrain",
-    "url": "https://widgets.outbrain.com/outbrain.js"
-  },
-  {
-    "name": "Criteo",
-    "url": "https://static.criteo.net/js/ld/publishertag.js"
-  },
-  {
-    "name": "AdSense",
-    "url": "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
-  },
-  {
-    "name": "PopAds",
-    "url": "https://www.popads.net/pop.js"
-  }
-]
+  { "name": "Google Ads", "url": "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" },
+  { "name": "Google Syndication", "url": "https://pagead2.googlesyndication.com/pagead/js/show_ads.js" },
+  { "name": "DoubleClick GPT", "url": "https://securepubads.g.doubleclick.net/tag/js/gpt.js" },
+  { "name": "Google Tag Services", "url": "https://www.googletagservices.com/tag/js/gpt.js" },
+  { "name": "Google Ads Service", "url": "https://adservice.google.com/pagead/aclk" },
+  { "name": "Google AdSense", "url": "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" },
+  { "name": "Google Ads OSD", "url": "https://pagead2.googlesyndication.com/pagead/osd.js" },
+  { "name": "Google SafeFrame", "url": "https://tpc.googlesyndication.com/safeframe/1-0-40/html/container.html" },
+  { "name": "Google CM Pixel", "url": "https://cm.g.doubleclick.net/pixel" },
+  { "name": "Google Ad Manager", "url": "https://googleads.g.doubleclick.net/pagead/ads" },
+
+  { "name": "Amazon Ads", "url": "https://c.amazon-adsystem.com/aax2/apstag.js" },
+  { "name": "Amazon AAX", "url": "https://aax.amazon-adsystem.com/s/apstag.js" },
+  { "name": "Taboola", "url": "https://cdn.taboola.com/libtrc/unip.min.js" },
+  { "name": "Outbrain", "url": "https://widgets.outbrain.com/outbrain.js" },
+  { "name": "Criteo", "url": "https://static.criteo.net/js/ld/publishertag.js" },
+  { "name": "PubMatic", "url": "https://ads.pubmatic.com/AdServer/js/gpt.js" },
+  { "name": "Rubicon Project", "url": "https://ads.rubiconproject.com/prebid.js" },
+  { "name": "Xandr AppNexus", "url": "https://ib.adnxs.com/ut/v3/prebid" },
+  { "name": "OpenX", "url": "https://us-u.openx.net/w/1.0/jstag" },
+  { "name": "Yieldmo", "url": "https://ads.yieldmo.com/yp.js" },
+
+  { "name": "MGID", "url": "https://ads.mgid.com/js/loader.js" },
+  { "name": "AdButler", "url": "https://servedbyadbutler.com/app.js" },
+  { "name": "AdRoll", "url": "https://static.adroll.com/j/roundtrip.js" },
+  { "name": "TripleLift", "url": "https://ads.triplelift.com/worker/collect" },
+  { "name": "SmartyAds", "url": "https://cdn.smrtb.com/ads.js" },
+  { "name": "InMobi", "url": "https://ads.inmobi.com/showad.js" },
+  { "name": "Smaato", "url": "https://ads.smaato.net/js/smaato.min.js" },
+  { "name": "Magnite", "url": "https://static.magnite.com/tag.js" },
+  { "name": "Index Exchange", "url": "https://js.indexww.com/ht/p/1833-123456.js" },
+  { "name": "Sovrn", "url": "https://ap.lijit.com/www/delivery/fpi.js" },
+
+  { "name": "AdTechUS", "url": "https://adserver.adtechus.com/js/at1.js" },
+  { "name": "Yieldlab", "url": "https://cdn.yldmgr.com/Yieldlab.js" },
+  { "name": "Seedtag", "url": "https://cdn.seedtag.com/rtb.js" },
+  { "name": "Teads", "url": "https://a.teads.tv/page/123456/123456" },
+  { "name": "Revcontent", "url": "https://trends.revcontent.com/serve.js" },
+  { "name": "MediaVine", "url": "https://cdn.mediavine.com/videos.js" },
+  { "name": "BidSwitch", "url": "https://cdn.adswizz.com/adswizz.js" },
+  { "name": "Sharethrough", "url": "https://btlr.sharethrough.com/assets/js/through.js" },
+  { "name": "GumGum", "url": "https://gumgum.com/ps.js" },
+  { "name": "AdsWizz", "url": "https://cdn.adswizz.com/adswizz.js" },
+
+  { "name": "SpotX", "url": "https://js.spotx.tv/spotx.js" },
+  { "name": "Tremor Video", "url": "https://player-yt.tremorhub.com/player.js" },
+  { "name": "Azerion", "url": "https://static.azerion.net/azerion.js" },
+  { "name": "PropellerAds", "url": "https://static.propellerads.com/propeller.js" },
+  { "name": "Clickadu", "url": "https://clickadu.com/v1.js" },
+  { "name": "PopAds", "url": "https://www.popads.net/pop.js" },
+  { "name": "HilltopAds", "url": "https://hilltopads.net/script.js" },
+  { "name": "AdKernel", "url": "https://cdn.adkernel.com/adkernel.js" },
+  { "name": "Ezoic Ads", "url": "https://g.ezoic.net/ezoic.js" },
+  { "name": "PubGalaxy", "url": "https://cdn.pubgalaxy.com/publisher.js" }
+    ]
