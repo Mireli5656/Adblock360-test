@@ -4,10 +4,6 @@
     "url": "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
   },
   {
-    "name": "Google Syndication",
-    "url": "https://pagead2.googlesyndication.com/pagead/js/show_ads.js"
-  },
-  {
     "name": "DoubleClick",
     "url": "https://securepubads.g.doubleclick.net/tag/js/gpt.js"
   },
@@ -18,5 +14,29 @@
   {
     "name": "Media.net",
     "url": "https://contextual.media.net/dmedianet.js"
+  },
+  {
+    "name": "Amazon Ads",
+    "url": "https://c.amazon-adsystem.com/aax2/apstag.js"
+  },
+  {
+    "name": "Taboola",
+    "url": "https://cdn.taboola.com/libtrc/unip.js"
+  },
+  {
+    "name": "Outbrain",
+    "url": "https://widgets.outbrain.com/outbrain.js"
+  },
+  {
+    "name": "Criteo",
+    "url": "https://static.criteo.net/js/ld/publishertag.js"
+  },
+  {
+    "name": "AdSense",
+    "url": "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
+  },
+  {
+    "name": "PopAds",
+    "url": "https://www.popads.net/pop.js"
   }
 ]
