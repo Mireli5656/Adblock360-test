@@ -1,101 +1,104 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>AdBlock360 Test</title>
 
-    <meta name="description" content="Open Source AdBlock, Tracker & Privacy Test">
+    <meta name="description" content="Test your ad blocker, tracker protection, and browser privacy with AdBlock360.">
     <meta name="theme-color" content="#0f172a">
 
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
-
 <body>
 
 <div class="background">
     <div class="blur blur1"></div>
     <div class="blur blur2"></div>
+    <div class="blur blur3"></div>
 </div>
 
-<header>
-
+<header class="topbar">
     <nav class="navbar">
-
-        <div class="logo">
-            AdBlock360
-        </div>
+        <div class="logo">AdBlock360</div>
 
         <ul class="nav-links">
             <li><a href="#home">Home</a></li>
             <li><a href="#results">Results</a></li>
             <li><a href="#about">About</a></li>
         </ul>
-
     </nav>
-
 </header>
 
 <main>
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <div class="badge">Open Source • Privacy Focused</div>
 
-<section id="home" class="hero">
+            <h1>AdBlock360 Test</h1>
 
-    <div class="hero-content">
+            <p>
+                Check ad blocking, tracker protection, and browser privacy in seconds.
+            </p>
 
-        <h1>AdBlock360 Test</h1>
+            <div class="hero-actions">
+                <button id="startTest" class="primary-btn">Start Test</button>
+                <a class="secondary-btn" href="#results">View Results</a>
+            </div>
 
-        <p>
-            Test your AdBlock, tracker protection and browser privacy in seconds.
-        </p>
+            <div class="hero-stats">
+                <div class="stat-card">
+                    <strong>Ads</strong>
+                    <span>Blocked / Allowed</span>
+                </div>
+                <div class="stat-card">
+                    <strong>Trackers</strong>
+                    <span>Protection Check</span>
+                </div>
+                <div class="stat-card">
+                    <strong>Privacy</strong>
+                    <span>Browser Signals</span>
+                </div>
+            </div>
+        </div>
+    </section>
 
-        <button id="startTest">
-            Start Test
-        </button>
+    <section id="results" class="section">
+        <div class="section-head">
+            <h2>Results</h2>
+            <p>Run the test to see which resources were blocked.</p>
+        </div>
 
-    </div>
+        <div id="resultCard" class="result-card">
+            <p>Press <strong>Start Test</strong> to begin.</p>
+        </div>
+    </section>
 
-</section>
+    <section id="about" class="section">
+        <div class="section-head">
+            <h2>About</h2>
+            <p>A clean testing page built for GitHub Pages.</p>
+        </div>
 
-<section id="results">
+        <div class="about-grid">
+            <div class="about-card">
+                <h3>What it does</h3>
+                <p>Loads a list of ad and tracker resources and shows what gets blocked.</p>
+            </div>
 
-    <h2>Results</h2>
-
-    <div id="resultCard">
-        <p>Press <strong>Start Test</strong> to begin.</p>
-    </div>
-
-</section>
-
-<section id="about">
-
-    <h2>About</h2>
-
-    <div class="about-card">
-
-        <p>
-            AdBlock360 Test is an open source privacy project that checks ad blocking,
-            tracker blocking and browser privacy.
-        </p>
-
-    </div>
-
-</section>
-
+            <div class="about-card">
+                <h3>Why it matters</h3>
+                <p>Helps you understand how your DNS, browser shields, and extensions behave.</p>
+            </div>
+        </div>
+    </section>
 </main>
 
-<footer>
-
-    <p>
-        © 2026 AdBlock360 Test • Open Source
-    </p>
-
+<footer class="footer">
+    <p>© 2026 AdBlock360 Test • Open Source</p>
 </footer>
 
-<script src="assets/js/score.js"></script>
+<script src="assets/js/engine.js"></script>
 <script src="assets/js/script.js"></script>
-
 </body>
-
     </html>
