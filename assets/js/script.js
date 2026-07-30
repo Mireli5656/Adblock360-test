@@ -1,29 +1,43 @@
 const startButton = document.getElementById("startTest");
 const resultCard = document.getElementById("resultCard");
 
-async function loadJson(path) {
-    const response = await fetch(path);
+async function loadTests() {
+    const response = await fetch("tests/ads.json");
 
     if (!response.ok) {
-        throw new Error(`Failed to load: ${path}`);
+        throw new Error("ads.json tapılmadı");
     }
 
     return await response.json();
 }
 
-async function runTests(title, tests) {
+async function testUrl(test) {
+    return new Promise((resolve) => {
 
-    let html = `<h3>${title}</h3><ul>`;
+        const script = document.createElement("script");
 
-    for (const test of tests) {
-        html += `<li>⏳ ${test.name}</li>`;
-    }
+        script.src = test.url;
+        script.async = true;
 
-    html += "</ul>";
+        script.onload = () => {
+            script.remove();
+            resolve({
+                name: test.name,
+                blocked: false
+            });
+        };
 
-    resultCard.innerHTML = html;
+        script.onerror = () => {
+            script.remove();
+            resolve({
+                name: test.name,
+                blocked: true
+            });
+        };
 
-    return tests.length;
+        document.body.appendChild(script);
+
+    });
 }
 
 startButton.addEventListener("click", async () => {
@@ -31,31 +45,45 @@ startButton.addEventListener("click", async () => {
     startButton.disabled = true;
     startButton.textContent = "Testing...";
 
+    resultCard.innerHTML = "<h3>Running tests...</h3>";
+
     try {
 
-        const ads = await loadJson("tests/ads.json");
-        const trackers = await loadJson("tests/trackers.json");
+        const tests = await loadTests();
 
-        const adCount = await runTests("Ads", ads);
-        const trackerCount = await runTests("Trackers", trackers);
+        let blocked = 0;
 
-        resultCard.innerHTML = `
-            <h2>✅ Engine Loaded</h2>
+        let html = "<h2>Results</h2><ul>";
 
-            <p>Ads Tests: <b>${adCount}</b></p>
+        for (const test of tests) {
 
-            <p>Tracker Tests: <b>${trackerCount}</b></p>
+            const result = await testUrl(test);
 
-            <p>Everything loaded successfully.</p>
+            if (result.blocked) {
+                blocked++;
+                html += `<li>🟢 ${result.name} - Blocked</li>`;
+            } else {
+                html += `<li>🔴 ${result.name} - Allowed</li>`;
+            }
+
+            resultCard.innerHTML = html + "</ul>";
+        }
+
+        html += `
+        </ul>
+
+        <hr>
+
+        <h3>Blocked ${blocked} / ${tests.length}</h3>
         `;
 
-    } catch (error) {
+        resultCard.innerHTML = html;
 
-        console.error(error);
+    } catch (err) {
 
         resultCard.innerHTML = `
-            <h2>❌ Error</h2>
-            <p>${error.message}</p>
+            <h2>Error</h2>
+            <p>${err.message}</p>
         `;
 
     }
