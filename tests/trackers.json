@@ -1,22 +1,56 @@
 [
-  {
-    "name": "Google Analytics",
-    "url": "https://www.google-analytics.com/analytics.js"
-  },
-  {
-    "name": "Google Tag Manager",
-    "url": "https://www.googletagmanager.com/gtm.js"
-  },
-  {
-    "name": "Facebook Pixel",
-    "url": "https://connect.facebook.net/en_US/fbevents.js"
-  },
-  {
-    "name": "TikTok Pixel",
-    "url": "https://analytics.tiktok.com/i18n/pixel/events.js"
-  },
-  {
-    "name": "Hotjar",
-    "url": "https://static.hotjar.com/c/hotjar.js"
-  }
-]
+  { "name": "Google Analytics", "url": "https://www.google-analytics.com/analytics.js" },
+  { "name": "Google Analytics ga.js", "url": "https://www.google-analytics.com/ga.js" },
+  { "name": "Google Analytics collect", "url": "https://www.google-analytics.com/g/collect" },
+  { "name": "Google Analytics region1", "url": "https://region1.google-analytics.com/g/collect" },
+  { "name": "Google Tag Manager", "url": "https://www.googletagmanager.com/gtm.js" },
+  { "name": "Google Tag", "url": "https://www.googletagmanager.com/gtag/js" },
+  { "name": "Google Ads User List", "url": "https://www.google.com/pagead/1p-user-list" },
+  { "name": "DoubleClick Stats", "url": "https://stats.g.doubleclick.net/j/collect" },
+  { "name": "Google Conversion", "url": "https://www.googleadservices.com/pagead/conversion.js" },
+  { "name": "Google ReCAPTCHA", "url": "https://www.google.com/recaptcha/api.js" },
+
+  { "name": "Facebook Pixel", "url": "https://connect.facebook.net/en_US/fbevents.js" },
+  { "name": "Facebook Track", "url": "https://www.facebook.com/tr" },
+  { "name": "TikTok Pixel", "url": "https://analytics.tiktok.com/i18n/pixel/events.js" },
+  { "name": "TikTok Config", "url": "https://analytics.tiktok.com/i18n/pixel/config.js" },
+  { "name": "Hotjar", "url": "https://static.hotjar.com/c/hotjar.js" },
+  { "name": "Hotjar Module", "url": "https://script.hotjar.com/modules.2026.js" },
+  { "name": "Mixpanel", "url": "https://api.mixpanel.com/track" },
+  { "name": "Mixpanel CDN", "url": "https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js" },
+  { "name": "Segment", "url": "https://cdn.segment.com/analytics.js/v1" },
+  { "name": "RudderStack", "url": "https://cdn.rudderlabs.com/v1.1/rudder-analytics.min.js" },
+
+  { "name": "Amplitude", "url": "https://cdn.amplitude.com/libs/amplitude-8.5.0-min.gz.js" },
+  { "name": "New Relic", "url": "https://js-agent.newrelic.com/nr-1247.min.js" },
+  { "name": "Microsoft Clarity", "url": "https://www.clarity.ms/tag" },
+  { "name": "Bing Bat", "url": "https://bat.bing.com/bat.js" },
+  { "name": "Bing Pixel", "url": "https://c.bing.com/p" },
+  { "name": "LinkedIn Insight", "url": "https://snap.licdn.com/li.lms-analytics/insight.min.js" },
+  { "name": "Twitter Ads", "url": "https://static.ads-twitter.com/uwt.js" },
+  { "name": "Twitter Ads CT", "url": "https://analytics.twitter.com/i/adsct" },
+  { "name": "Quantcast", "url": "https://pixel.quantserve.com/pixel.js" },
+  { "name": "Quantcast Secure", "url": "https://secure.quantserve.com/quant.js" },
+
+  { "name": "FullStory", "url": "https://edge.fullstory.com/s/fs.js" },
+  { "name": "Heap Analytics", "url": "https://cdn.heapanalytics.com/js/heap.js" },
+  { "name": "PostHog", "url": "https://app.posthog.com/static/array.js" },
+  { "name": "Matomo", "url": "https://matomo.example.invalid/matomo.js" },
+  { "name": "Plausible", "url": "https://plausible.io/js/script.js" },
+  { "name": "Umami", "url": "https://umami.is/script.js" },
+  { "name": "Snowplow", "url": "https://cdn.jsdelivr.net/npm/@snowplow/javascript-tracker@latest/dist/sp.js" },
+  { "name": "Chartbeat", "url": "https://static.chartbeat.com/js/chartbeat.js" },
+  { "name": "Comscore", "url": "https://sb.scorecardresearch.com/beacon.js" },
+  { "name": "Nielsen", "url": "https://cdn-gl.imrworldwide.com/novms/js/2/ggcmb510.js" },
+
+  { "name": "Intercom", "url": "https://widget.intercom.io/widget.js" },
+  { "name": "Zendesk", "url": "https://static.zdassets.com/ekr/snippet.js" },
+  { "name": "Tidio", "url": "https://code.tidio.co/tidio.js" },
+  { "name": "LiveChat", "url": "https://secure.livechatinc.com/tracking.js" },
+  { "name": "Drift", "url": "https://js.driftt.com/include.js" },
+  { "name": "Optimizely", "url": "https://cdn.optimizely.com/js/1234567890.js" },
+  { "name": "VWO", "url": "https://dev.visualwebsiteoptimizer.com/j.php" },
+  { "name": "Crazy Egg", "url": "https://script.crazyegg.com/pages/scripts/0000/0000.js" },
+  { "name": "Mouseflow", "url": "https://cdn.mouseflow.com/projects/0000.js" },
+  { "name": "Heap Script", "url": "https://cdn.heapanalytics.com/js/heap.js" }
+    ]
