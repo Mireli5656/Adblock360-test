@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const progressFill = document.getElementById("progressFill");
     const progressText = document.getElementById("progressText");
     const progressPercent = document.getElementById("progressPercent");
+    const resultsSection = document.getElementById("results");
 
     if (
         !startButton ||
@@ -87,29 +88,57 @@ document.addEventListener("DOMContentLoaded", () => {
 
     window.testResource = testResource;
 
+    async function copyText(value, button) {
+        try {
+            if (navigator.clipboard?.writeText) {
+                await navigator.clipboard.writeText(value);
+            } else {
+                const textarea = document.createElement("textarea");
+                textarea.value = value;
+                textarea.style.position = "fixed";
+                textarea.style.opacity = "0";
+                document.body.appendChild(textarea);
+                textarea.focus();
+                textarea.select();
+                document.execCommand("copy");
+                textarea.remove();
+            }
+
+            const originalText = button.textContent;
+            button.textContent = "Copied ✓";
+            window.setTimeout(() => {
+                button.textContent = originalText;
+            }, 1400);
+        } catch {
+            button.textContent = "Failed";
+            window.setTimeout(() => {
+                button.textContent = "Copy";
+            }, 1400);
+        }
+    }
+
     function renderResultItem(result) {
         const domain = extractDomain(result.url);
         const statusLabel = result.blocked ? "Blocked" : "Allowed";
         const statusIcon = result.blocked ? "🟢" : "🔴";
+        const statusClass = result.blocked ? "blocked" : "allowed";
 
         return `
             <details class="result-item">
                 <summary class="result-summary">
                     <span class="result-name">${statusIcon} ${escapeHtml(result.name)}</span>
-                    <span class="result-status">${statusLabel}</span>
+                    <span class="result-status ${statusClass}">${statusLabel}</span>
                 </summary>
 
                 <div class="result-details">
+                    <p><strong>Category:</strong> ${escapeHtml(result.category)}</p>
                     <p><strong>Domain:</strong> ${escapeHtml(domain)}</p>
                     <p><strong>URL:</strong> ${escapeHtml(result.url)}</p>
-                    <p><strong>Category:</strong> ${escapeHtml(result.category)}</p>
 
-                    <button
-                        type="button"
-                        class="copy-btn"
-                        data-domain="${escapeHtml(domain)}">
-                        Copy Domain
-                    </button>
+                    <div class="result-actions">
+                        <button type="button" class="copy-btn" data-copy-value="${escapeHtml(domain)}">Copy Domain</button>
+                        <button type="button" class="copy-btn" data-copy-value="${escapeHtml(result.url)}">Copy URL</button>
+                    </div>
                 </div>
             </details>
         `;
@@ -122,31 +151,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 <div class="test-list">
                     ${results.length ? results.map(renderResultItem).join("") : "<p>Waiting...</p>"}
                 </div>
-            </div>
-        `;
-    }
-
-    function renderFinalReport(adResults, trackerResults) {
-        const all = [...adResults, ...trackerResults];
-        const blocked = all.filter((r) => r.blocked).length;
-        const total = all.length;
-        const score = total ? Math.round((blocked / total) * 100) : 100;
-
-        return `
-            <h2>AdBlock360 Report</h2>
-
-            <div class="report-stats">
-                <p><strong>Blocked:</strong> ${blocked} / ${total}</p>
-                <p><strong>Score:</strong> ${score} / 100</p>
-                <p><strong>Ads:</strong> ${adResults.filter((r) => r.blocked).length} / ${adResults.length}</p>
-                <p><strong>Trackers:</strong> ${trackerResults.filter((r) => r.blocked).length} / ${trackerResults.length}</p>
-            </div>
-
-            <hr>
-
-            <div class="result-grid">
-                <div>${renderResults("Ads", adResults)}</div>
-                <div>${renderResults("Trackers", trackerResults)}</div>
             </div>
         `;
     }
@@ -165,22 +169,62 @@ document.addEventListener("DOMContentLoaded", () => {
         `;
     }
 
-    async function runCategory(title, tests, totalTests, state) {
-        const { results, doneRef } = state;
+    function renderFinalReport(adResults, trackerResults, elapsedMs) {
+        const all = [...adResults, ...trackerResults];
+        const blocked = all.filter((r) => r.blocked).length;
+        const total = all.length;
+        const score = total ? Math.round((blocked / total) * 100) : 100;
 
+        const adsBlocked = adResults.filter((r) => r.blocked).length;
+        const trackersBlocked = trackerResults.filter((r) => r.blocked).length;
+
+        const adScore = adResults.length ? Math.round((adsBlocked / adResults.length) * 100) : 100;
+        const trackerScore = trackerResults.length ? Math.round((trackersBlocked / trackerResults.length) * 100) : 100;
+        const seconds = (elapsedMs / 1000).toFixed(2);
+
+        return `
+            <h2>AdBlock360 Report</h2>
+
+            <div class="report-stats">
+                <p><strong>Blocked:</strong> ${blocked} / ${total}</p>
+                <p><strong>Score:</strong> ${score} / 100</p>
+                <p><strong>Ads:</strong> ${adsBlocked} / ${adResults.length}</p>
+                <p><strong>Trackers:</strong> ${trackersBlocked} / ${trackerResults.length}</p>
+                <p><strong>Completed in:</strong> ${seconds}s</p>
+            </div>
+
+            <hr>
+
+            <div class="report-stats">
+                <p><strong>Protection Analysis</strong></p>
+                <p>Ads: ${adScore}%</p>
+                <p>Trackers: ${trackerScore}%</p>
+                <p>Overall: ${score}%</p>
+            </div>
+
+            <hr>
+
+            <div class="result-grid">
+                <div>${renderResults("Ads", adResults)}</div>
+                <div>${renderResults("Trackers", trackerResults)}</div>
+            </div>
+        `;
+    }
+
+    async function runCategory(title, tests, targetResults, state, totalTests) {
         for (const test of tests) {
-            setProgress(doneRef.value + 1, totalTests, `Testing ${title}: ${test.name}`);
+            setProgress(state.done + 1, totalTests, `Testing ${state.done + 1}/${totalTests}: ${test.name}`);
 
             const blocked = await testResource(test.url);
 
-            results.push({
+            targetResults.push({
                 name: test.name,
                 url: test.url,
                 category: title,
                 blocked
             });
 
-            doneRef.value += 1;
+            state.done += 1;
             resultCard.innerHTML = renderRunningReport(
                 state.adResults,
                 state.trackerResults,
@@ -189,52 +233,14 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    async function copyDomain(domain, button) {
-        try {
-            await navigator.clipboard.writeText(domain);
-            const originalText = button.textContent;
-            button.textContent = "Copied ✓";
-
-            window.setTimeout(() => {
-                button.textContent = originalText;
-            }, 1400);
-
-            return true;
-        } catch {
-            try {
-                const textarea = document.createElement("textarea");
-                textarea.value = domain;
-                textarea.style.position = "fixed";
-                textarea.style.opacity = "0";
-                document.body.appendChild(textarea);
-                textarea.focus();
-                textarea.select();
-                document.execCommand("copy");
-                textarea.remove();
-
-                const originalText = button.textContent;
-                button.textContent = "Copied ✓";
-
-                window.setTimeout(() => {
-                    button.textContent = originalText;
-                }, 1400);
-
-                return true;
-            } catch {
-                button.textContent = "Failed";
-                return false;
-            }
-        }
-    }
-
     resultCard.addEventListener("click", (event) => {
         const button = event.target.closest(".copy-btn");
         if (!button) return;
 
-        const domain = button.dataset.domain || "";
-        if (!domain) return;
+        const value = button.dataset.copyValue || "";
+        if (!value) return;
 
-        copyDomain(domain, button);
+        copyText(value, button);
     });
 
     startButton.addEventListener("click", async () => {
@@ -247,6 +253,8 @@ document.addEventListener("DOMContentLoaded", () => {
         progressPercent.textContent = "0%";
         resultCard.innerHTML = "<p>Loading tests...</p>";
 
+        const startedAt = performance.now();
+
         try {
             const ads = await loadJson("tests/ads.json");
             const trackers = await loadJson("tests/trackers.json");
@@ -254,21 +262,23 @@ document.addEventListener("DOMContentLoaded", () => {
             const state = {
                 adResults: [],
                 trackerResults: [],
-                doneRef: { value: 0 }
+                done: 0
             };
 
             const total = ads.length + trackers.length;
 
-            await runCategory("Ads", ads, total, state);
-            await runCategory("Trackers", trackers, total, state);
+            await runCategory("Ads", ads, state.adResults, state, total);
+            await runCategory("Trackers", trackers, state.trackerResults, state, total);
+
+            const elapsedMs = performance.now() - startedAt;
 
             progressFill.style.width = "100%";
             progressText.textContent = "Completed";
             progressPercent.textContent = "100%";
 
-            resultCard.innerHTML = renderFinalReport(state.adResults, state.trackerResults);
+            resultCard.innerHTML = renderFinalReport(state.adResults, state.trackerResults, elapsedMs);
 
-            document.getElementById("results")?.scrollIntoView({
+            resultsSection?.scrollIntoView({
                 behavior: "smooth",
                 block: "start"
             });
