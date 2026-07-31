@@ -1,29 +1,47 @@
-function testResource(url, timeout = 2500) {
+async function testResource(test) {
     return new Promise((resolve) => {
-        const script = document.createElement("script");
+
+        const img = new Image();
+
         let finished = false;
 
-        const done = (blocked) => {
+        function complete(blocked) {
             if (finished) return;
+
             finished = true;
-            script.remove();
-            resolve(blocked);
-        };
 
-        const timer = setTimeout(() => done(true), timeout);
-
-        script.onload = () => {
-            clearTimeout(timer);
-            done(false);
-        };
-
-        script.onerror = () => {
-            clearTimeout(timer);
-            done(true);
-        };
-
-        script.src = url;
-        script.async = true;
-        document.head.appendChild(script);
-    });
+            resolve({
+                name: test.name,
+                url: test.url,
+                blocked
+            });
         }
+
+        img.onload = () => complete(false);
+
+        img.onerror = () => complete(true);
+
+        img.src = test.url + "?t=" + Date.now();
+
+        setTimeout(() => complete(true), 3000);
+
+    });
+}
+
+async function runTests(testList, onProgress = null) {
+
+    const results = [];
+
+    for (let i = 0; i < testList.length; i++) {
+
+        const result = await testResource(testList[i]);
+
+        results.push(result);
+
+        if (onProgress) {
+            onProgress(i + 1, testList.length, result);
+        }
+    }
+
+    return results;
+            }
